@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  api-django:
+    build: ./services/api_django
+    container_name: api_django
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+
+  inference-asgi:
+    build: ./services/inference-asgi
+    container_name: inference-asgi
+    ports:
+      - "8500:8500"
+
+  coturn:
+    image: instrumentisto/coturn
+    container_name: coturn
+    command: >
+      --log-file=stdout
+      --external-ip=$(detect-external-ip)
+      --lt-cred-mech
+      --realm=kaizen.local
+      --server-name=coturn
+      --listening-port=3478
+      --fingerprint
+    ports:
+      - "3478:3478/udp"
+      - "3478:3478/tcp"
+
+  redis:
+    image: redis:6
+    container_name: redis
+    ports:
+      - "6379:6379"
