@@ -1,3 +1,13 @@
 fastapi
 uvicorn[standard]
-pydantic
+websockets
+aiortc
+numpy
+soundfile
+torch
+torchaudio
+torchvision
+faster-whisper
+av
+silero_vad
+

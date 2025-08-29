@@ -1,6 +1,21 @@
-FROM python:3.9-slim
+FROM python:3.10-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+PYTHONUNBUFFERED=1
+
+# System deps for aiortc/av/ffmpeg
+RUN apt-get update && apt-get install -y \
+    ffmpeg \
+    libavdevice-dev libavfilter-dev libavformat-dev libavcodec-dev \
+    libavutil-dev libswresample-dev libswscale-dev \
+    libsndfile1 \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
+
+
+EXPOSE 8500
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8500"]
