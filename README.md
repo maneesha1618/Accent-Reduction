@@ -72,8 +72,8 @@ accent-reduction/
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/<your-username>/accent-reduction.git
-cd accent-reduction
+git clone https://github.com/maneesha1618/Accent-Reduction.git
+cd Accent-Reduction
 ```
 
 ### 2️⃣ Create & Activate Virtual Environment
