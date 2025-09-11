@@ -1,21 +1,27 @@
-FROM python:3.10-slim
+# Use Python 3.12 slim image
+FROM python:3.12-slim
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-PYTHONUNBUFFERED=1
-
-# System deps for aiortc/av/ffmpeg
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     ffmpeg \
-    libavdevice-dev libavfilter-dev libavformat-dev libavcodec-dev \
-    libavutil-dev libswresample-dev libswscale-dev \
     libsndfile1 \
     && rm -rf /var/lib/apt/lists/*
 
+# Set work directory
 WORKDIR /app
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy requirements
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
 COPY . .
 
-
+# Expose app port
 EXPOSE 8500
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8500"]
+
+# Run ASGI app with uvicorn
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8500"]
